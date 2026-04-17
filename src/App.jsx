@@ -14,7 +14,8 @@ import {
   addDoc,
   onSnapshot,
   deleteDoc,
-  doc
+  doc,
+  updateDoc
 } from "firebase/firestore";
 
 function Imagem() {
@@ -30,7 +31,7 @@ function Imagem() {
 }
 
 function App() {
-
+  
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -38,13 +39,15 @@ function App() {
   const [alunos, setAlunos] = useState([]);
   const [nome, setNome] = useState("");
   const [curso, setCurso] = useState("");
-  
+
+  const [editandoId, setEditandoId] = useState(null);
+
   useEffect(() => {
-    const unsubscribeAuth = onAuthStateChanged(auth, (usuario) => {
+    const unsubscribe = onAuthStateChanged(auth, (usuario) => {
       setUser(usuario);
     });
 
-    return () => unsubscribeAuth();
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -100,10 +103,18 @@ function App() {
     }
 
     try {
-      await addDoc(collection(db, "alunos"), {
-        nome,
-        curso
-      });
+      if (editandoId) {
+        await updateDoc(doc(db, "alunos", editandoId), {
+          nome,
+          curso
+        });
+        setEditandoId(null);
+      } else {
+        await addDoc(collection(db, "alunos"), {
+          nome,
+          curso
+        });
+      }
 
       setNome("");
       setCurso("");
@@ -114,6 +125,18 @@ function App() {
 
   async function removerAluno(id) {
     await deleteDoc(doc(db, "alunos", id));
+  }
+
+  function editarAluno(aluno) {
+    setNome(aluno.nome);
+    setCurso(aluno.curso);
+    setEditandoId(aluno.id);
+  }
+
+  function cancelarEdicao() {
+    setNome("");
+    setCurso("");
+    setEditandoId(null);
   }
 
   if (!user) {
@@ -155,6 +178,10 @@ function App() {
           <li key={aluno.id}>
             {aluno.nome} - {aluno.curso}
 
+            <button onClick={() => editarAluno(aluno)}>
+              Editar
+            </button>
+
             <button onClick={() => removerAluno(aluno.id)}>
               Excluir
             </button>
@@ -162,7 +189,7 @@ function App() {
         ))}
       </ul>
 
-      <h3>Adicionar Aluno</h3>
+      <h3>{editandoId ? "Editar Aluno" : "Adicionar Aluno"}</h3>
 
       <input
         placeholder="Nome"
@@ -178,7 +205,15 @@ function App() {
 
       <br /><br />
 
-      <button onClick={salvarAluno}>Adicionar</button>
+      <button onClick={salvarAluno}>
+        {editandoId ? "Atualizar" : "Adicionar"}
+      </button>
+
+      {editandoId && (
+        <button onClick={cancelarEdicao}>
+          Cancelar
+        </button>
+      )}
     </div>
   );
 }
