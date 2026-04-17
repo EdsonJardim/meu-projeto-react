@@ -1,11 +1,27 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 
+import { auth, db } from "./firebase";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "firebase/auth";
+
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  deleteDoc,
+  doc
+} from "firebase/firestore";
+
 function Imagem() {
   return (
     <div>
-      <img 
-        src="https://i.pinimg.com/736x/7d/58/f6/7d58f617c7a57407bc0e25c0fa780ad9.jpg" 
+      <img
+        src="https://i.pinimg.com/736x/7d/58/f6/7d58f617c7a57407bc0e25c0fa780ad9.jpg"
         alt="educação"
         width="120"
       />
@@ -14,109 +30,155 @@ function Imagem() {
 }
 
 function App() {
-  const [alunos, setAlunos] = useState([
-    { nome: "Edson", curso: "ADS" },
-    { nome: "Marcela", curso: "Engenharia" },
-    { nome: "Daniela", curso: "Medicina" },
-    { nome: "Felipe", curso: "Direito" }
-  ]);
 
+  const [user, setUser] = useState(null);
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+
+  const [alunos, setAlunos] = useState([]);
   const [nome, setNome] = useState("");
   const [curso, setCurso] = useState("");
-  const [editIndex, setEditIndex] = useState(null);
-
+  
   useEffect(() => {
-    console.log("Sistema Acadêmico iniciado");
+    const unsubscribeAuth = onAuthStateChanged(auth, (usuario) => {
+      setUser(usuario);
+    });
+
+    return () => unsubscribeAuth();
   }, []);
 
-  function salvarAluno() {
-    if (!nome || !curso) return;
+  useEffect(() => {
+    if (!user) return;
 
-    if (editIndex !== null) {
-      const listaAtualizada = [...alunos];
-      listaAtualizada[editIndex] = { nome, curso };
-      setAlunos(listaAtualizada);
-      setEditIndex(null);
-    } else {
-      setAlunos([...alunos, { nome, curso }]);
+    const unsubscribe = onSnapshot(collection(db, "alunos"), (snapshot) => {
+      const lista = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setAlunos(lista);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
+  async function cadastrar() {
+    if (!email || !senha) {
+      alert("Preencha email e senha!");
+      return;
     }
 
-    setNome("");
-    setCurso("");
+    try {
+      await createUserWithEmailAndPassword(auth, email, senha);
+      alert("Usuário cadastrado!");
+    } catch (err) {
+      alert(err.message);
+    }
   }
 
-  function editarAluno(index) {
-    setNome(alunos[index].nome);
-    setCurso(alunos[index].curso);
-    setEditIndex(index);
+  async function login() {
+    if (!email || !senha) {
+      alert("Preencha email e senha!");
+      return;
+    }
+
+    try {
+      await signInWithEmailAndPassword(auth, email, senha);
+      alert("Logado!");
+    } catch (err) {
+      alert(err.message);
+    }
   }
 
-  function cancelarEdicao() {
-    setNome("");
-    setCurso("");
-    setEditIndex(null);
+  async function logout() {
+    await signOut(auth);
   }
 
-  function removerAluno(index) {
-    const novaLista = alunos.filter((_, i) => i !== index);
-    setAlunos(novaLista);
+  async function salvarAluno() {
+    if (!nome || !curso) {
+      alert("Preencha todos os campos!");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "alunos"), {
+        nome,
+        curso
+      });
+
+      setNome("");
+      setCurso("");
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function removerAluno(id) {
+    await deleteDoc(doc(db, "alunos", id));
+  }
+
+  if (!user) {
+    return (
+      <div className="container">
+        <h1>Login</h1>
+
+        <input
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <input
+          type="password"
+          placeholder="Senha"
+          onChange={(e) => setSenha(e.target.value)}
+        />
+
+        <br /><br />
+
+        <button onClick={login}>Login</button>
+        <button onClick={cadastrar}>Cadastrar</button>
+      </div>
+    );
   }
 
   return (
     <div className="container">
       <h1>Sistema Acadêmico</h1>
 
-      {/* 👇 Aqui a imagem */}
+      <button onClick={logout}>Logout</button>
+
       <Imagem />
 
       <h3>Lista de Alunos</h3>
 
       <ul>
-        {alunos.map((aluno, i) => (
-          <li key={i}>
-            <span>
-              {aluno.nome} - {aluno.curso}
-            </span>
+        {alunos.map((aluno) => (
+          <li key={aluno.id}>
+            {aluno.nome} - {aluno.curso}
 
-            <div>
-              <button className="btn-edit" onClick={() => editarAluno(i)}>
-                Editar
-              </button>
-              <button className="btn-delete" onClick={() => removerAluno(i)}>
-                Excluir
-              </button>
-            </div>
+            <button onClick={() => removerAluno(aluno.id)}>
+              Excluir
+            </button>
           </li>
         ))}
       </ul>
 
-      <h3>{editIndex !== null ? "Editar Aluno" : "Adicionar Aluno"}</h3>
+      <h3>Adicionar Aluno</h3>
 
-      <div>
-        <input
-          placeholder="Nome"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-        />
+      <input
+        placeholder="Nome"
+        value={nome}
+        onChange={(e) => setNome(e.target.value)}
+      />
 
-        <input
-          placeholder="Curso"
-          value={curso}
-          onChange={(e) => setCurso(e.target.value)}
-        />
-      </div>
+      <input
+        placeholder="Curso"
+        value={curso}
+        onChange={(e) => setCurso(e.target.value)}
+      />
 
-      <br />
+      <br /><br />
 
-      <button className="btn-primary" onClick={salvarAluno}>
-        {editIndex !== null ? "Atualizar" : "Adicionar"}
-      </button>
-
-      {editIndex !== null && (
-        <button className="btn-cancel" onClick={cancelarEdicao}>
-          Cancelar
-        </button>
-      )}
+      <button onClick={salvarAluno}>Adicionar</button>
     </div>
   );
 }
