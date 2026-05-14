@@ -1,94 +1,131 @@
-# Prova
-# Sistema Acadêmico
+# Sistema Acadêmico + Personagens Marvel
 
-Projeto desenvolvido com **React + Firebase**, com autenticação de usuários e gerenciamento de alunos.
+Projeto desenvolvido em React utilizando Firebase Authentication e Firestore.
 
----
+O sistema permite:
 
-## Funcionalidades
-
-* Cadastro e login de usuários (Firebase Auth)
-* Cadastro de alunos
-* Edição de dados
-* Exclusão de registros
-* Atualização em tempo real (Firestore)
-* Deploy online com Firebase Hosting
+- Cadastro e login de usuários
+- CRUD completo de alunos
+- CRUD completo de personagens Marvel
+- Upload de imagens via URL
+- Integração com Firebase
+- Seed automático de personagens
+- Interface dinâmica com React Hooks
 
 ---
 
-## Tecnologias utilizadas
+# Tecnologias utilizadas
 
-* React (Vite)
-* Firebase Authentication
-* Firestore Database
-* Firebase Hosting
-
----
-
-## Acesso ao projeto
-
- https://db10edsonprova.web.app
+- React
+- Firebase Authentication
+- Firebase Firestore
+- JavaScript
+- CSS
+- Supabase Storage (imagens)
 
 ---
 
-## Como rodar o projeto
+# Funcionalidades
+
+## Autenticação
+
+- Cadastro de usuários
+- Login
+- Logout
+- Persistência de sessão com Firebase Auth
+
+---
+
+## Gerenciamento de alunos
+
+- Adicionar aluno
+- Editar aluno
+- Excluir aluno
+- Listagem em tempo real usando Firestore
+
+---
+
+## Personagens Marvel
+
+- Cadastro de personagens
+- Edição de personagens
+- Exclusão de personagens
+- Exibição de imagens
+- Cadastro automático inicial (seed)
+- Data de cadastro
+
+---
+
+# Estrutura do projeto
 
 ```bash
-# Instalar dependências
-npm install
-
-# Rodar em ambiente de desenvolvimento
-npm run dev
-
-# Gerar build de produção
-npm run build
-
-# Fazer deploy no Firebase
-firebase deploy
-```
-
----
-
-## Estrutura básica
-
-```
 src/
- ├── components/
+ ├── App.js
+ ├── App.css
  ├── firebase.js
- ├── App.jsx
- └── main.jsx
+ └── assets/
 ```
 
 ---
 
-## Configuração do Firebase
+# Firebase utilizado
 
-Crie um arquivo `firebase.js` com suas credenciais do Firebase:
+O projeto utiliza:
 
-```js
-// Exemplo simplificado
-import { initializeApp } from "firebase/app";
+- Firebase Authentication
+- Cloud Firestore
 
-const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
-  authDomain: "SEU_PROJETO.firebaseapp.com",
-  projectId: "SEU_PROJETO",
-};
+---
 
-const app = initializeApp(firebaseConfig);
+# Como executar o projeto
+
+## Clonar o repositório
+
+```bash
+git clone https://github.com/EdsonJardim/meu-projeto-react.git
 ```
 
 ---
 
-## Observações
+## Instalar dependências
 
-* O banco de dados (Firestore) é gerenciado diretamente pelo Firebase
-* Não é necessário backend próprio
-* Projeto desenvolvido para fins acadêmicos
+```bash
+npm install
+```
 
 ---
 
-## Autor
+## Rodar o projeto
 
-Edson Eduardo Soares Jardim
+```bash
+npm start
+```
+
+ou
+
+```bash
+npm run dev
+```
+
+---
+
+# Imagens
+
+As imagens dos personagens são armazenadas utilizando URLs públicas do Supabase Storage.
+
+---
+
+# Funcionalidades futuras
+
+- Upload real de imagens
+- Responsividade mobile
+- Pesquisa de personagens
+- Tema dark mode
+- Paginação
+
+---
+
+# Autor
+
+Desenvolvido por Edson Jardim
 
