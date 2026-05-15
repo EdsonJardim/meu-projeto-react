@@ -111,7 +111,7 @@ https://meu-projeto-react-six.vercel.app
 
 ---
 
-# Autor
+# Autores
 
-Desenvolvido por Edson Jardim
+Desenvolvido por Edson Jardim, Andre Alves, Rafaela Pereira e Marcio Tulio.
 
