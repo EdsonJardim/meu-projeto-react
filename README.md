@@ -2,26 +2,21 @@
 
 Projeto desenvolvido em React utilizando Firebase Authentication e Firestore.
 
-O sistema permite:
+## Projeto Online
 
-- Cadastro e login de usuários
-- CRUD completo de alunos
-- CRUD completo de personagens Marvel
-- Upload de imagens via URL
-- Integração com Firebase
-- Seed automático de personagens
-- Interface dinâmica com React Hooks
+https://meu-projeto-react-six.vercel.app
 
 ---
 
 # Tecnologias utilizadas
 
 - React
+- Vite
 - Firebase Authentication
 - Firebase Firestore
 - JavaScript
 - CSS
-- Supabase Storage (imagens)
+- Supabase Storage
 
 ---
 
@@ -38,10 +33,10 @@ O sistema permite:
 
 ## Gerenciamento de alunos
 
-- Adicionar aluno
-- Editar aluno
-- Excluir aluno
-- Listagem em tempo real usando Firestore
+- Adicionar alunos
+- Editar alunos
+- Excluir alunos
+- Atualização em tempo real com Firestore
 
 ---
 
@@ -50,8 +45,9 @@ O sistema permite:
 - Cadastro de personagens
 - Edição de personagens
 - Exclusão de personagens
-- Exibição de imagens
-- Cadastro automático inicial (seed)
+- Upload via URL de imagem
+- Exibição de cards
+- Seed automático de personagens
 - Data de cadastro
 
 ---
@@ -68,18 +64,20 @@ src/
 
 ---
 
-# Firebase utilizado
+# Firebase
 
 O projeto utiliza:
 
 - Firebase Authentication
 - Cloud Firestore
 
+Com regras de segurança autenticadas para proteção dos dados.
+
 ---
 
 # Como executar o projeto
 
-## Clonar o repositório
+## 1. Clonar o repositório
 
 ```bash
 git clone https://github.com/EdsonJardim/meu-projeto-react.git
@@ -87,7 +85,7 @@ git clone https://github.com/EdsonJardim/meu-projeto-react.git
 
 ---
 
-## Instalar dependências
+## 2. Instalar dependências
 
 ```bash
 npm install
@@ -95,13 +93,7 @@ npm install
 
 ---
 
-## Rodar o projeto
-
-```bash
-npm start
-```
-
-ou
+## 3. Executar o projeto
 
 ```bash
 npm run dev
@@ -109,9 +101,13 @@ npm run dev
 
 ---
 
-# Imagens
+# Deploy
 
-As imagens dos personagens são armazenadas utilizando URLs públicas do Supabase Storage.
+Projeto publicado na Vercel.
+
+Link do deploy:
+
+https://meu-projeto-react-six.vercel.app
 
 ---
 
@@ -121,7 +117,7 @@ As imagens dos personagens são armazenadas utilizando URLs públicas do Supabas
 - Responsividade mobile
 - Pesquisa de personagens
 - Tema dark mode
-- Paginação
+- Dashboard administrativo
 
 ---
 
