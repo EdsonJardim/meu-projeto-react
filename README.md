@@ -111,16 +111,6 @@ https://meu-projeto-react-six.vercel.app
 
 ---
 
-# Funcionalidades futuras
-
-- Upload real de imagens
-- Responsividade mobile
-- Pesquisa de personagens
-- Tema dark mode
-- Dashboard administrativo
-
----
-
 # Autor
 
 Desenvolvido por Edson Jardim
